@@ -33,7 +33,7 @@ const ProductList = () => {
                       <List.Item>
                         <List.Item.Meta
                           avatar={<Avatar src={item.image} />}
-                          title={<a href="https://ant.design">{item.name}</a>}
+                          title={<a href={`/products/${item.id}`}>{item.name}</a>}
                           description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                           key={item.id}
                         />

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Row, Col, Card, Button, Divider} from 'antd'
 import ProductForm from '../components/ProductForm';
 import {Link} from "react-router-dom";
-import ProductList from "../components/ProductList";
 
 const CreateProduct = () => {
     const [isProductCreated, setIsProductCreated] = useState(false)

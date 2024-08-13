@@ -6,10 +6,11 @@ import CreateCategory from "./CreateCategory";
 
 const { Option } = Select;
 
-const ProductForm = ({onProductCreation}) => {
+const ProductForm = ({onSubmit}) => {
     const [categories, setCategories] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [file, setFile] = useState(null);
+    const [form] = Form.useForm();
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -40,16 +41,17 @@ const ProductForm = ({onProductCreation}) => {
         formData.append('image',file);
         formData.append('category', values.category)
         try {
-            await ProductsAPI(formData);
+            const response = await ProductsAPI(formData);
+            console.log("Product Form Data:", response.data)
+            onSubmit(response.data);
             alert('Product created successfully!');
-            onProductCreation();
         } catch (error) {
             console.error('Error creating product:', error);
         }
     };
 
     return (
-        <Form layout="horizontal" onFinish={handleProductCreation}>
+        <Form layout="horizontal" onFinish={handleProductCreation} form={form}>
             <Form.Item label="Product Name" name="name" rules={[{ required: true, message: 'Please enter the product name' }]}>
                 <Input placeholder="Enter product name" />
             </Form.Item>

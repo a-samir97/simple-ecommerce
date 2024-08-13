@@ -1,31 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import { Form, Input, Button, Select} from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { PartAPI } from '../services/api';
 
 const { Option } = Select;
 
-const PartForm = () => {
-    const [products, setProducts] = useState([])
-
-    useEffect(() => {
-            async function fetchProducts() {
-                try {
-                    const response = await fetch("http://localhost:8000/api/products/");
-                    const data = await response.json();
-                    setProducts(data)
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                }
-            }
-            // FIXME: get called 2 times
-            fetchProducts();
-        },
-        []);
-    const handleSubmit = async (values) => {
-        const data = { name: values.name, product: values.product};
+const PartForm = ({onSubmit, formData}) => {
+        const [form] = Form.useForm();
+        const handleSubmit = async (values) => {
+        const {product, names} = values;
+        const payload = names.map(name =>({product, name}))
         try {
-            await PartAPI(data);
-            console.log(values.name, values.product)
+            const response = await PartAPI(payload);
+            onSubmit(response.data)
             alert('Part choice added successfully!');
         } catch (error) {
             console.error('Error adding part choice:', error);
@@ -33,19 +20,73 @@ const PartForm = () => {
     };
 
     return (
-        <Form layout="vertical" onFinish={handleSubmit}>
+        <Form
+            layout="horizontal"
+            onFinish={handleSubmit}
+            initialValues={{
+                names:['']
+            }}
+            form={form}
+        >
             <Form.Item label="Product" name="product" rules={[{ required: true, message: 'Please select an attribute' }]}>
                 <Select placeholder="Select Product">
-                            {
-                                products.map((product) =>
-                                    <Option value={product.id} key={product.id}>{product.name}</Option>
-                                )
-                            }
-                            </Select>
+                        <Option value={formData.id} key={formData.id}>{formData.name}</Option>
+                </Select>
             </Form.Item>
-            <Form.Item label="Part Name" name="name" rules={[{ required: true, message: 'Please enter the part name' }]}>
-                <Input placeholder="Enter part name" />
+             <Form.List
+        name="names"
+      >
+        {(fields, { add, remove }, { errors }) => (
+          <>
+            {fields.map((field, index) => (
+              <Form.Item
+                label={index === 0 ? 'Parts' : ''}
+                required={false}
+                key={field.key}
+              >
+                <Form.Item
+                  {...field}
+                  validateTrigger={['onChange', 'onBlur']}
+                  rules={[
+                    {
+                      required: true,
+                      whitespace: true,
+                      message: "Please input parts's name or delete this field.",
+                    },
+                  ]}
+                  noStyle
+                >
+                  <Input
+                    placeholder="part name"
+                    style={{
+                      width: '60%',
+                    }}
+                  />
+                </Form.Item>
+                {fields.length > 1 ? (
+                  <MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    onClick={() => remove(field.name)}
+                  />
+                ) : null}
+              </Form.Item>
+            ))}
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                style={{
+                  width: '60%',
+                }}
+                icon={<PlusOutlined />}
+              >
+                Add New Part
+              </Button>
+              <Form.ErrorList errors={errors} />
             </Form.Item>
+          </>
+        )}
+      </Form.List>
             <Form.Item>
                 <Button type="primary" htmlType="submit">
                     Add Part(s) to product
