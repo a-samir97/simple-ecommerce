@@ -28,17 +28,10 @@ class PartSerializer(serializers.ModelSerializer):
         list_serializer_class = PartBulkCreateSerializer
 
 
-class OptionBulkCreateSerializer(serializers.ListSerializer):
-    def create(self, validated_data):
-        option_data = [models.Option(**option) for option in validated_data]
-        return models.Option.objects.bulk_create(option_data)
-
-
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Option
         fields = "__all__"
-        list_serializer_class = OptionBulkCreateSerializer
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

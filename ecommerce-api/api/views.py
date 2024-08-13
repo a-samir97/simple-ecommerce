@@ -1,4 +1,8 @@
+from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.parsers import FormParser
+from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
 
 from . import models
 from . import serializers
@@ -28,14 +32,23 @@ class PartViewSet(viewsets.ModelViewSet):
 class OptionViewSet(viewsets.ModelViewSet):
     queryset = models.Option.objects.all()
     serializer_class = serializers.OptionSerializer
+    parser_classes = [MultiPartParser, FormParser]
 
-    def get_serializer(self, *args, **kwargs):
-        print(kwargs.get("data"), "\n\n\n\n")
-        converted_data = list(kwargs.get("data", []))
-        # to handle bulk create for options
-        if len(converted_data) > 1:
-            kwargs["many"] = True
-        return super().get_serializer(*args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        options_data = []
+        for i in range(len(request.POST) // 3):  # 3 is the nunber of fields per option
+            option = {
+                "name": request.POST.get(f"option[{i}][name]"),
+                "price": request.POST.get(f"option[{i}][price]"),
+                "part": request.POST.get(f"option[{i}][part]"),
+                "image": request.FILES.get(f"option[{i}][image]"),
+            }
+            options_data.append(option)
+        serializer = self.get_serializer(data=options_data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
