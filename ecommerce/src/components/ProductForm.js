@@ -40,6 +40,8 @@ const ProductForm = ({onSubmit}) => {
         formData.append('name', values.name)
         formData.append('image',file);
         formData.append('category', values.category)
+
+        console.log(formData)
         try {
             const response = await ProductsAPI(formData);
             console.log("Product Form Data:", response.data)

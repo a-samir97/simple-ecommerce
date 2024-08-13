@@ -7,29 +7,45 @@ const { Item } = Form;
 
 const PartsOptionsForm = ({onSubmit, formData}) => {
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState({}); // Store files by part ID and option index
 
   const onFinish = async (values) => {
-      console.log(values)
-      console.log(values.parts)
-
         const formattedData = Object.entries(values.parts).flatMap(([partID, partData]) =>
-           partData.options.map(option => ({
+           partData.options.map((option, optionIndex) => ({
           part: partID,
           name: option.name,
           price: option.price,
-          image: option.image,
+          image: fileList[`${partID}_${optionIndex}`],
         }))
       );
-      console.log(formattedData)
-      const data = {values}
+
+      const payload = new FormData();
+      formattedData.forEach((data, index) => {
+          payload.append(`option[${index}][name]`, data.name)
+          payload.append(`option[${index}][price]`, data.price)
+          payload.append(`option[${index}][image]`, data.image)
+          payload.append(`option[${index}][part]`, data.part)
+      })
+
+      console.log(payload)
         try {
-            const response = await OptionsAPI(data);
+            const response = await OptionsAPI(payload);
             onSubmit(response.data)
             alert('Part choice added successfully!');
         } catch (error) {
             console.error('Error adding part choice:', error);
         }
     console.log('Form values:', values);
+  };
+
+  const handleFileChange = (partID, optionIndex, info) => {
+    const file = info.file;
+    if (file.status !== 'removed') {
+      setFileList(prevFileList => ({
+        ...prevFileList,
+        [`${partID}_${optionIndex}`]: file, // Store file with a unique key
+      }));
+    }
   };
 
   return (
@@ -87,6 +103,7 @@ const PartsOptionsForm = ({onSubmit, formData}) => {
                                     maxCount={1}
                                     beforeUpload={() => false}
                                     showUploadList={false}
+                                    onChange={info => handleFileChange(id, optionName, info)}
                                   >
                                     <Button icon={<UploadOutlined />}>Upload Image</Button>
                                   </Upload>
