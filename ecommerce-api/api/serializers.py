@@ -15,17 +15,30 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class PartBulkCreateSerializer(serializers.ListSerializer):
+    def create(self, validated_data):
+        part_data = [models.Part(**part) for part in validated_data]
+        return models.Part.objects.bulk_create(part_data)
+
+
 class PartSerializer(serializers.ModelSerializer):
-    # TODO: return options for each part here
     class Meta:
         model = models.Part
         fields = "__all__"
+        list_serializer_class = PartBulkCreateSerializer
+
+
+class OptionBulkCreateSerializer(serializers.ListSerializer):
+    def create(self, validated_data):
+        option_data = [models.Option(**option) for option in validated_data]
+        return models.Option.objects.bulk_create(option_data)
 
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Option
         fields = "__all__"
+        list_serializer_class = OptionBulkCreateSerializer
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

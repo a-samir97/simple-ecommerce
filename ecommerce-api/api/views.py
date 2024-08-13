@@ -18,10 +18,24 @@ class PartViewSet(viewsets.ModelViewSet):
     queryset = models.Part.objects.all()
     serializer_class = serializers.PartSerializer
 
+    def get_serializer(self, *args, **kwargs):
+        # to handle bulk create parts
+        if isinstance(kwargs.get("data", {}), list):
+            kwargs["many"] = True
+        return super(PartViewSet, self).get_serializer(*args, **kwargs)
+
 
 class OptionViewSet(viewsets.ModelViewSet):
     queryset = models.Option.objects.all()
     serializer_class = serializers.OptionSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        print(kwargs.get("data"), "\n\n\n\n")
+        converted_data = list(kwargs.get("data", []))
+        # to handle bulk create for options
+        if len(converted_data) > 1:
+            kwargs["many"] = True
+        return super().get_serializer(*args, **kwargs)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
