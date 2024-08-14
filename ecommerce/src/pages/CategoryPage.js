@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row, Col} from 'antd'
-import CategoryList from "../components/CategoryList";
+import CategoryList from "./CategoryList";
 import {Divider} from "antd/lib";
 
 const CategoryListPage = () => {

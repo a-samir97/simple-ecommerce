@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Form, Select, Button } from 'antd';
-import { CustomPriceAPI } from '../services/api';
+import {ProhibitedCombinationAPI} from '../services/api';
 
 const { Option } = Select;
 
-const ProhibitedCombinations = () => {
+const ProhibitedCombinations = ({onSubmit, formData}) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
 
     const handleSubmit = async (values) => {
-        const data = { options: selectedOptions, additional_price: values.additionalPrice };
+        const data = { options: selectedOptions};
         try {
-            await CustomPriceAPI(data);
+            const response = await ProhibitedCombinationAPI(data);
+            onSubmit(response.json);
             alert('Prohibited combinations set successfully!');
         } catch (error) {
             console.error('Error setting prohibited combinations:', error);
@@ -26,11 +27,11 @@ const ProhibitedCombinations = () => {
                     value={selectedOptions}
                     onChange={(values) => setSelectedOptions(values)}
                 >
-                    {/*need to fill data by calling endpoint to get options*/}
-                    {/* need to make the form more dynamic to accept more than prohibited combinations */}
-
-                    <Option value="full_suspension_frame">Full Suspension Frame</Option>
-                    <Option value="diamond_frame">Diamond Frame</Option>
+                        {
+                                formData.map((option) =>
+                                    <Option value={option.id} key={option.id}>{option.name}</Option>
+                                )
+                        }
 
                 </Select>
             </Form.Item>

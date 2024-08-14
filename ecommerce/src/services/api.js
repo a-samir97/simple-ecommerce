@@ -20,6 +20,6 @@ export const ProductsAPI = (data) => postMultiPart('products/', data);
 export const PartAPI = (data) => postJson('parts/', data);
 export const CategoryAPI = (data) => postMultiPart("categories/", data);
 export const OptionsAPI = (data) => postMultiPart("options/", data);
-export const CustomPriceAPI = (data) => postJson('custom-price/', data);
-
+export const CustomPriceAPI = (data) => postJson('custom-prices/', data);
+export const ProhibitedCombinationAPI = (data) => postJson('prohibited-combinations/', data)
 export default API;

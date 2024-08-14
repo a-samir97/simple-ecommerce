@@ -4,13 +4,15 @@ import { CustomPriceAPI } from '../services/api';
 
 const { Option } = Select;
 
-const PriceRuleForm = () => {
+const PriceRuleForm = ({onSubmit, formData}) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
 
     const handleSubmit = async (values) => {
         const data = { options: selectedOptions, additional_price: values.additionalPrice };
+        console.log(data)
         try {
-            await CustomPriceAPI(data);
+            const response = await CustomPriceAPI(data);
+            onSubmit(formData);
             alert('Price rule set successfully!');
         } catch (error) {
             console.error('Error setting price rule:', error);
@@ -26,9 +28,11 @@ const PriceRuleForm = () => {
                     value={selectedOptions}
                     onChange={(values) => setSelectedOptions(values)}
                 >
-                    <Option value="full_suspension_frame">Full Suspension Frame</Option>
-                    <Option value="diamond_frame">Diamond Frame</Option>
-                    {/* Add more options dynamically */}
+                        {
+                                formData.map((option) =>
+                                    <Option value={option.id} key={option.id}>{option.name}</Option>
+                                )
+                        }
                 </Select>
             </Form.Item>
             <Form.Item label="Additional Price" name="additionalPrice" rules={[{ required: true, message: 'Please enter the additional price' }]}>

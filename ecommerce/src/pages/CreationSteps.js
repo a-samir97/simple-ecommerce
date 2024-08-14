@@ -87,11 +87,11 @@
 
 import React, { useState } from 'react';
 import { Button, message, Steps, theme } from 'antd';
-import ProductForm from "./ProductForm";
-import PartForm from "./PartForm";
-import PartsOptionsForm from "./TestComponent";
-import PriceRuleForm from "./PriceRuleForm";
-import ProhibitedCombinations from "./ProhibitedCombinations";
+import ProductForm from "../components/ProductForm";
+import PartForm from "../components/PartForm";
+import PartsOptionsForm from "../components/OptionForm";
+import PriceRuleForm from "../components/PriceRuleForm";
+import ProhibitedCombinations from "../components/ProhibitedCombinations";
 
 const steps = [
   {
