@@ -12,10 +12,31 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        category = self.get_object()
+        serializer = self.get_serializer(category)
+        products_serializer = serializers.ProductSerializer(
+            category.products, many=True
+        )
+        data = {**serializer.data, "products": products_serializer.data}
+        return Response(data=data, status=status.HTTP_200_OK)
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        product = self.get_object()
+        serializer = self.get_serializer(product)
+        parts_serializer = serializers.RetrievePartOptionSerializer(
+            product.parts, many=True
+        )
+        data = {
+            **serializer.data,
+            "parts": parts_serializer.data,
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class PartViewSet(viewsets.ModelViewSet):

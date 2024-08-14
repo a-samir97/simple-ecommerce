@@ -21,6 +21,12 @@ class PartBulkCreateSerializer(serializers.ListSerializer):
         return models.Part.objects.bulk_create(part_data)
 
 
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Option
+        fields = "__all__"
+
+
 class PartSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Part
@@ -28,10 +34,12 @@ class PartSerializer(serializers.ModelSerializer):
         list_serializer_class = PartBulkCreateSerializer
 
 
-class OptionSerializer(serializers.ModelSerializer):
+class RetrievePartOptionSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True)
+
     class Meta:
-        model = models.Option
-        fields = "__all__"
+        model = models.Part
+        fields = ["name", "options"]
 
 
 class BulkCreateCustomPriceSerializer(serializers.ListSerializer):

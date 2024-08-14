@@ -16,7 +16,7 @@ from .models import Product
 def get_temporary_image():
     return SimpleUploadedFile(
         name="test_image.jpg",
-        content=open("./download.png", "rb").read(),
+        content=open("./utiles/download.png", "rb").read(),
         content_type="image/jpeg",
     )
 

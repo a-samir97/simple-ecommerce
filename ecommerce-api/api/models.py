@@ -17,7 +17,9 @@ class Product(models.Model):
     """
 
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="products"
+    )
     description = models.TextField(null=True, blank=True)
     image = models.ImageField()
 
@@ -29,7 +31,7 @@ class Part(models.Model):
     """
 
     name = models.CharField(max_length=100)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="parts")
 
 
 class Option(models.Model):
@@ -38,7 +40,7 @@ class Option(models.Model):
     """
 
     name = models.CharField(max_length=100)
-    part = models.ForeignKey(Part, on_delete=models.CASCADE)
+    part = models.ForeignKey(Part, on_delete=models.CASCADE, related_name="options")
     price = models.FloatField()  # original price
     image = models.ImageField()
     quantity = models.PositiveIntegerField(default=0)
