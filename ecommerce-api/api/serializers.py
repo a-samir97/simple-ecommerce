@@ -34,6 +34,36 @@ class OptionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class BulkCreateCustomPriceSerializer(serializers.ListSerializer):
+    def create(self, validated_data):
+        custom_price_data = [
+            models.CustomPrice(**custom_price) for custom_price in validated_data
+        ]
+        return models.CustomPrice.objects.bulk_create(custom_price_data)
+
+
+class CustomPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CustomPrice
+        fields = "__all__"
+        list_serializer_class = BulkCreateCustomPriceSerializer
+
+
+class BulkCreateProhibitedCombinationSerializer(serializers.ListSerializer):
+    def create(self, validated_data):
+        combinations = [
+            models.ProhibitedCombination(**combination)
+            for combination in validated_data
+        ]
+        return models.ProhibitedCombination.objects.bulk_create(combinations)
+
+
+class ProhibitedCombinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProhibitedCombination
+        fields = "__all__"
+
+
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OrderItem

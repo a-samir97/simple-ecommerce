@@ -51,6 +51,16 @@ class OptionViewSet(viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
+class CustomPriceViewSet(viewsets.ModelViewSet):
+    queryset = models.CustomPrice.objects.all()
+    serializer_class = serializers.CustomPriceSerializer
+
+
+class ProhibitedCombinationViewSet(viewsets.ModelViewSet):
+    queryset = models.ProhibitedCombination.objects.all()
+    serializer_class = serializers.ProhibitedCombinationSerializer
+
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
