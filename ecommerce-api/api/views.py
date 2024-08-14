@@ -16,7 +16,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         category = self.get_object()
         serializer = self.get_serializer(category)
         products_serializer = serializers.ProductSerializer(
-            category.products, many=True
+            category.products.all(), many=True, context={"request": request}
         )
         data = {**serializer.data, "products": products_serializer.data}
         return Response(data=data, status=status.HTTP_200_OK)
@@ -30,7 +30,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         product = self.get_object()
         serializer = self.get_serializer(product)
         parts_serializer = serializers.RetrievePartOptionSerializer(
-            product.parts, many=True
+            product.parts, many=True, context={"request": request}
         )
         data = {
             **serializer.data,
