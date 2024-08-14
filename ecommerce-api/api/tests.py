@@ -1,5 +1,4 @@
 import tempfile
-from io import BytesIO
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
@@ -50,51 +49,117 @@ class CategoryAPIsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_existing_category_with_valid_data(self):
-        pass
+        data = {"name": "new test"}
+        response = self.client.patch(f"{self.url}{self.category.id}/", data=data)
+        self.category.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.category.name, data["name"])
 
     def test_update_existing_category_with_invalid_data(self):
-        pass
+        # invalid input
+        data = {"name": ""}
+        response = self.client.patch(f"{self.url}{self.category.id}/", data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_non_existing_category(self):
-        pass
+        data = {"name": "test"}
+        # invalid category id
+        response = self.client.patch(f"{self.url}{10000}/", data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_existing_category(self):
-        pass
+        # count categories before calling delete endpoint
+        categories_count_before = Category.objects.count()
+        response = self.client.delete(f"{self.url}{self.category.id}/")
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Category.objects.count(), categories_count_before - 1)
 
     def test_delete_non_existing_category(self):
-        pass
+        # invalid category id
+        response = self.client.delete(f"{self.url}{10000}/")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_list_all_cateogries(self):
-        pass
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_existing_category_by_id(self):
-        pass
+        response = self.client.get(f"{self.url}{self.category.id}/")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], self.category.name)
+        self.assertEqual(response.data["id"], self.category.id)
 
     def test_get_non_existing_category_by_id(self):
-        pass
+        response = self.client.get(f"{self.url}{10000}/")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class ProductAPIsTest(TestCase):
     def setUp(self) -> None:
-        pass
+        self.category = Category.objects.create(
+            name="test category", icon=get_temporary_image()
+        )
+        self.product = Product.objects.create(
+            name="product test",
+            image=get_temporary_image(),
+            category=self.category,
+        )
+        self.client = APIClient()
+        self.url = "/api/products/"
 
     def tearDown(self) -> None:
-        pass
+        Product.objects.all().delete()
+        Category.objects.all().delete()
 
     def test_create_product_with_valid_data(self):
-        pass
+        data = {
+            "name": "test product",
+            "image": get_temporary_image(),
+            "category": self.category.id,
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        # get the last created product
+        last_product = Product.objects.last()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["id"], last_product.id)
+        self.assertEqual(response.data["name"], last_product.name)
 
     def test_create_product_with_invalid_data(self):
-        pass
+        # invalid data
+        data = {}
+
+        response = self.client.post(self.url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_list_all_products(self):
-        pass
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # TODO: test counts after pagination
 
     def test_get_existing_product_by_id(self):
-        pass
+        response = self.client.get(f"{self.url}{self.product.id}/")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["id"], self.product.id)
+        self.assertEqual(response.data["name"], self.product.name)
+        self.assertEqual(response.data["category"], self.product.category.id)
 
     def test_get_non_existing_product_by_id(self):
-        pass
+        # invalid product id
+        response = self.client.get(f"{self.url}{100000}/")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class PartAPIsTest(TestCase):
