@@ -11,6 +11,7 @@ from . import serializers
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
+    pagination_class = None
 
     def retrieve(self, request, *args, **kwargs):
         category = self.get_object()
