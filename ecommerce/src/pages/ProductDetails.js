@@ -1,72 +1,58 @@
 import React, {useEffect, useState} from 'react';
-import {Row, Col, Image, Space, Descriptions, Button, Divider} from 'antd';
+import {Card, Row, Col, Typography, List, Image, Button} from 'antd';
 import {useParams} from "react-router-dom";
-const items = [
-  {
-    key: '1',
-    label: 'Product',
-    children: 'Cloud Database',
-  },
-  {
-    key: '2',
-    label: 'Billing Mode',
-    children: 'Prepaid',
-  },
-  {
-    key: '3',
-    label: 'Automatic Renewal',
-    children: 'YES',
-  },
-  {
-    key: '4',
-    label: 'Order time',
-    children: '2018-04-24 18:00:00',
-  },
-  {
-    key: '5',
-    label: 'Usage Time',
-    children: '2019-04-24 18:00:00',
-    span: 2,
-  },
-  {
-    key: '6',
-    label: 'Negotiated Amount',
-    children: '$80.00',
-  },
-      {
-    key: '7',
-    label: 'Order time',
-    children: '2018-04-24 18:00:00',
-  },
-  {
-    key: '8',
-    label: 'Usage Time',
-    children: '2019-04-24 18:00:00',
-    span: 2,
-  },
-  {
-    key: '9',
-    label: 'Negotiated Amount',
-    children: '$80.00',
-  },
-  {
-    key: '10',
-    label: 'Order time',
-    children: '2018-04-24 18:00:00',
-  },
-  {
-    key: '11',
-    label: 'Usage Time',
-    children: '2019-04-24 18:00:00',
-    span: 2,
-  },
-  {
-    key: '12',
-    label: 'Negotiated Amount',
-    children: '$80.00',
-  },
-]
+import {Divider} from "antd/lib";
+import ProductPage from "../components/ProductPage";
+const { Title, Text } = Typography;
 
+const ProductDetail = ({ product }) => {
+    return (
+        <>
+        <Card style={{ maxWidth: '800px', margin: 'auto' }}>
+            <Row gutter={[16, 16]}>
+                <Col span={8}>
+                    <Image
+                        src={product.image}
+                        alt={product.name}
+                        width="100%"
+                    />
+                </Col>
+                <Col span={16}>
+                    <Title level={2}>{product.name}</Title>
+                </Col>
+            </Row>
+
+            {/* Parts and Options */}
+            <div style={{ marginTop: '20px' }}>
+                <Title level={4}>Parts and Options</Title>
+                {product.parts.map(part => (
+                    <Card
+                        key={part.id}
+                        title={part.name}
+                        bordered={false}
+                        style={{ marginBottom: '16px' }}
+                    >
+                        <List
+                            itemLayout="horizontal"
+                            dataSource={part.options}
+                            renderItem={option => (
+                                <List.Item>
+                                    <List.Item.Meta
+                                        title={option.name}
+                                    />
+                                    <Text strong>${option.price}</Text>
+                                </List.Item>
+                            )}
+                        />
+                    </Card>
+                ))}
+            </div>
+        </Card>
+    </>
+    );
+};
+
+// Render the component
 const ProductDetailsComponent = () => {
     const {id} = useParams();
     const [product, setProduct] = useState(null);
@@ -87,6 +73,7 @@ const ProductDetailsComponent = () => {
 
         fetchProductDetails();
     }, [id])
+
      if (loading) {
         return <div>Loading...</div>; // Show a loading state while fetching
       }
@@ -94,27 +81,14 @@ const ProductDetailsComponent = () => {
       if (!product) {
         return <div>Product not found.</div>; // Handle case where product is not found
       }
+
     return (
-        <>
-        <h2>Product Details</h2>
-            <Divider></Divider>
-        <div style={{margin:"100px"}}>
-        <Row justify={"space-around"}>
-            <Col span={12}>
-                <Descriptions title="Product Info" bordered items={items} />
-            </Col>
-            <Col span={4}>
-                <h4> Product Image </h4>
-                <Image src={product.image}></Image>
-            </Col>
-        </Row>
-            <Divider></Divider>
-            <Space>
-                <Button> Add to Cart</Button>
-                <Button>Checkout</Button>
-            </Space>
-    </div>
-    </>
+        <div style={{ padding: '20px' }}>
+            <ProductDetail product={product} />
+            <Divider/>
+            <ProductPage product={product}/>
+        </div>
     );
-}
+};
+
 export default ProductDetailsComponent;

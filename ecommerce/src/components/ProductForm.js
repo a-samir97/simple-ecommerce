@@ -3,6 +3,7 @@ import {Form, Input, Button, Select, Upload, Row, Col} from 'antd';
 import {UploadOutlined} from "@ant-design/icons";
 import {ProductsAPI} from "../services/api";
 import CreateCategory from "./CreateCategory";
+import {message} from "antd/lib";
 
 const { Option } = Select;
 
@@ -20,6 +21,7 @@ const ProductForm = ({onSubmit}) => {
                     const response = await fetch("http://localhost:8000/api/categories/");
                     const data = await response.json();
                     setCategories(data)
+                    setIsModalOpen(false)
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -41,19 +43,20 @@ const ProductForm = ({onSubmit}) => {
         formData.append('image',file);
         formData.append('category', values.category)
 
-        console.log(formData)
         try {
             const response = await ProductsAPI(formData);
-            console.log("Product Form Data:", response.data)
+            message.success("Product Created Successfully!")
             onSubmit(response.data);
-            alert('Product created successfully!');
         } catch (error) {
             console.error('Error creating product:', error);
         }
     };
 
     return (
-        <Form layout="horizontal" onFinish={handleProductCreation} form={form}>
+        <Form layout="horizontal"
+              onFinish={handleProductCreation}
+              form={form}
+              style={{margin: "30px", width:"500px", marginLeft: "35%"}}>
             <Form.Item label="Product Name" name="name" rules={[{ required: true, message: 'Please enter the product name' }]}>
                 <Input placeholder="Enter product name" />
             </Form.Item>

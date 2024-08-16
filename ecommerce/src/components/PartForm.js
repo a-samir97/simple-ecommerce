@@ -1,22 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Form, Input, Button, Select} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { PartAPI } from '../services/api';
+import {message} from "antd/lib";
 
 const { Option } = Select;
 
 const PartForm = ({onSubmit, formData}) => {
         const [form] = Form.useForm();
         const handleSubmit = async (values) => {
-        const {product, names} = values;
-        const payload = names.map(name =>({product, name}))
-        try {
-            const response = await PartAPI(payload);
-            onSubmit(response.data)
-            alert('Part choice added successfully!');
-        } catch (error) {
-            console.error('Error adding part choice:', error);
-        }
+            const {product, names} = values;
+            const payload = names.map(name =>({product, name}))
+            try {
+                const response = await PartAPI(payload);
+                message.success("Parts created successfully!")
+                onSubmit(response.data)
+            } catch (error) {
+                console.error('Error adding part choice:', error);
+            }
     };
 
     return (
@@ -27,6 +28,7 @@ const PartForm = ({onSubmit, formData}) => {
                 names:['']
             }}
             form={form}
+            style={{margin: "30px", width:"500px", marginLeft: "35%"}}
         >
             <Form.Item label="Product" name="product" rules={[{ required: true, message: 'Please select an attribute' }]}>
                 <Select placeholder="Select Product">

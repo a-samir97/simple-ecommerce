@@ -1,19 +1,18 @@
 import {Button, Form, Input, Modal, Upload} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {CategoryAPI} from "../services/api";
 
 const CreateCategory = ({visible}) => {
     const [form] = Form.useForm();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(visible);
     const [file, setFile] = useState(null);
-
-    const handleOk = () => {
+    const closeModal = () => {
         setIsModalOpen(false);
     };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
+    useEffect(() => {
+        setIsModalOpen(visible)
+    }, [visible])
 
     const handleCategoryCreation = async (values) => {
         const formData = new FormData()
@@ -22,24 +21,25 @@ const CreateCategory = ({visible}) => {
         try {
             await CategoryAPI(formData);
             alert('Product created successfully!');
+            closeModal();
         } catch (error) {
             console.error('Error creating product:', error);
         }
     };
 
     const handleBeforeUpload = (file) => {
-        setFile(file);  // Capture the file in state
+        setFile(file);
         return false;   // Prevent automatic upload
     };
 
     return (
         <Modal
               title="Basic Modal"
-              open={visible}
-              onOk={handleOk}
-              onCancel={handleCancel}
+              open={isModalOpen}
+              onOk={closeModal}
+              onCancel={closeModal}
               footer={[
-                  <Button key="back" onClick={handleCancel}>
+                  <Button key="back" onClick={closeModal}>
                     Return
                   </Button>,
                   <Button key="submit" type="primary" onClick={() => form.submit()}>
@@ -62,8 +62,7 @@ const CreateCategory = ({visible}) => {
                         <Upload
                             name="icon"
                             listType="picture"
-                            beforeUpload={handleBeforeUpload} // Prevents automatic upload
-                            // onChange={handleFileChange}
+                            beforeUpload={handleBeforeUpload}
                             maxCount={1}
                         >
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>

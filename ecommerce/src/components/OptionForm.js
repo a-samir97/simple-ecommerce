@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { Form, Input, Button, Row, Col, Upload, Divider } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {OptionsAPI} from "../services/api";
+import {message} from "antd/lib";
 
 const { Item } = Form;
 
@@ -26,16 +27,13 @@ const PartsOptionsForm = ({onSubmit, formData}) => {
           payload.append(`option[${index}][image]`, data.image)
           payload.append(`option[${index}][part]`, data.part)
       })
-
-      console.log(payload)
         try {
             const response = await OptionsAPI(payload);
+            message.success("Options created successfully!")
             onSubmit(response.data)
-            alert('Part choice added successfully!');
         } catch (error) {
             console.error('Error adding part choice:', error);
         }
-    console.log('Form values:', values);
   };
 
   const handleFileChange = (partID, optionIndex, info) => {
@@ -54,6 +52,7 @@ const PartsOptionsForm = ({onSubmit, formData}) => {
       name="parts-options-form"
       onFinish={onFinish}
       layout="vertical"
+      style={{margin: "30px", width:"500px", marginLeft: "35%"}}
     >
       {/* Dynamic Parts Fields */}
       <Item name="parts">
@@ -135,15 +134,6 @@ const PartsOptionsForm = ({onSubmit, formData}) => {
                   />
                 </div>
               ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  icon={<PlusOutlined />}
-                >
-                  Add Part
-                </Button>
-              </Form.Item>
             </>
           )}
         </Form.List>

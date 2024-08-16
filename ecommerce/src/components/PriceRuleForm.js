@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Select, Input, Button } from 'antd';
 import { CustomPriceAPI } from '../services/api';
+import {message} from "antd/lib";
 
 const { Option } = Select;
 
@@ -11,16 +12,17 @@ const PriceRuleForm = ({onSubmit, formData}) => {
         const data = { options: selectedOptions, additional_price: values.additionalPrice };
         console.log(data)
         try {
-            const response = await CustomPriceAPI(data);
+            await CustomPriceAPI(data);
+            message.success("Custom Price created successfully, One last Step to finish")
             onSubmit(formData);
-            alert('Price rule set successfully!');
+
         } catch (error) {
             console.error('Error setting price rule:', error);
         }
     };
 
     return (
-        <Form layout="vertical" onFinish={handleSubmit}>
+        <Form layout="vertical" onFinish={handleSubmit} style={{margin: "30px", width:"500px", marginLeft: "35%"}}>
             <Form.Item label="Select Options" name="options">
                 <Select
                     mode="multiple"
