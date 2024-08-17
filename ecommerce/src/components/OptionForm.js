@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Form, Input, Button, Row, Col, Upload, Divider } from 'antd';
+import { Form, Input, Button, Row, Col, Upload, Divider, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {OptionsAPI} from "../services/api";
 import {message} from "antd/lib";
@@ -94,25 +94,28 @@ const PartsOptionsForm = ({onSubmit, formData}) => {
                                   {...restOptionField}
                                   name={[optionName, 'image']}
                                   rules={[{ required: true, message: 'Please upload an image' }]}
-                                  style={{ marginBottom: 0 }}
+                                  style={{ marginBottom: 0}}
                                 >
-                                  <Upload
-                                    name="image"
-                                    listType="picture"
-                                    maxCount={1}
-                                    beforeUpload={() => false}
-                                    showUploadList={false}
-                                    onChange={info => handleFileChange(id, optionName, info)}
-                                  >
-                                    <Button icon={<UploadOutlined />}>Upload Image</Button>
-                                  </Upload>
+                                    <Space>
+                                              <Upload
+                                                name="image"
+                                                listType="picture"
+                                                maxCount={1}
+                                                beforeUpload={() => false}
+                                                showUploadList={false}
+                                                onChange={info => handleFileChange(id, optionName, info)}
+                                              >
+                                                <Button icon={<UploadOutlined />}>Upload Image</Button>
+                                              </Upload>
+                                             <MinusCircleOutlined
+                                              onClick={() => removeOption(optionName)}
+                                            />
+                                        </Space>
                                 </Item>
                               </Col>
-                              <Col span={2} >
-                                <MinusCircleOutlined
-                                  onClick={() => removeOption(optionName)}
-                                />
-                              </Col>
+                              {/*<Col span={2} >*/}
+                              {/* */}
+                              {/*</Col>*/}
                             </Row>
                           </div>
                         ))}
@@ -128,10 +131,6 @@ const PartsOptionsForm = ({onSubmit, formData}) => {
                       </>
                     )}
                   </Form.List>
-                  <MinusCircleOutlined
-                    onClick={() => remove(name)}
-                    style={{ marginBottom: 8 }}
-                  />
                 </div>
               ))}
             </>

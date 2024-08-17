@@ -77,27 +77,13 @@ const CreationStepsComponent = () => {
         })}
       </div>
       <div style={{ marginTop: 24 }}>
-        <Button
-          type="primary"
-          onClick={() => next()}
-          disabled={!isFormSubmitted}
-        >
-          Next
-        </Button>
-        {current === steps.length - 1 && (
+        {current !== steps.length - 1 && (
           <Button
             type="primary"
-            onClick={() => message.success('Processing complete!')}
+            onClick={() => next()}
+            disabled={!isFormSubmitted}
           >
-            Done
-          </Button>
-        )}
-        {current > 0 && (
-          <Button
-            style={{ margin: '0 8px' }}
-            onClick={() => prev()}
-          >
-            Previous
+            Next
           </Button>
         )}
       </div>

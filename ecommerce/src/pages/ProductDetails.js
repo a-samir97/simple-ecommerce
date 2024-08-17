@@ -19,12 +19,13 @@ const ProductDetail = ({ product }) => {
                 </Col>
                 <Col span={16}>
                     <Title level={2}>{product.name}</Title>
+                    <Text type="secondary">({product.category})</Text>
                 </Col>
             </Row>
 
             {/* Parts and Options */}
             <div style={{ marginTop: '20px' }}>
-                <Title level={4}>Parts and Options</Title>
+                <Title level={4}>Options for {product.name} </Title>
                 {product.parts.map(part => (
                     <Card
                         key={part.id}
@@ -37,10 +38,10 @@ const ProductDetail = ({ product }) => {
                             dataSource={part.options}
                             renderItem={option => (
                                 <List.Item>
-                                    <List.Item.Meta
-                                        title={option.name}
-                                    />
-                                    <Text strong>${option.price}</Text>
+                                    <Text>{option.name}</Text>
+                                    <Text italic type="secondary">${option.price}</Text>
+                                    <Text italic type="secondary">{option.quantity} left</Text>
+                                    <Image src={option.image} style={{width:"100px"}}></Image>
                                 </List.Item>
                             )}
                         />

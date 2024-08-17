@@ -62,12 +62,14 @@ const PartForm = ({onSubmit, formData}) => {
                     placeholder="part name"
                     style={{
                       width: '60%',
+                        marginLeft:"5%"
                     }}
                   />
                 </Form.Item>
                 {fields.length > 1 ? (
                   <MinusCircleOutlined
                     className="dynamic-delete-button"
+                    style={{marginLeft:"7px"}}
                     onClick={() => remove(field.name)}
                   />
                 ) : null}

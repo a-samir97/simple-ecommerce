@@ -13,9 +13,8 @@ const ProductSelection = ({ addToCart, product }) => {
         const newParts = [...selectedParts];
         newParts[partIndex] = part;
         setSelectedParts(newParts);
-
+        console.log(selectedParts)
         // Update total price based on selected options
-        console.log(newParts)
         let price = newParts.reduce((sum, part) => sum + (part?.price || 0), 0);
         setTotalPrice(price);
 
@@ -38,12 +37,16 @@ const ProductSelection = ({ addToCart, product }) => {
 
     const handleAddToCart = () => {
         if (validateSelection()) {
+//             const itemData = {
+// ,
+//                 product: product.id
+//             }
             const productData = {
                 name: product.name,
-                parts: selectedParts,
-                totalPrice: totalPrice,
+                product: product.id,
+                options:selectedParts.map(data => data.option),
+                total_price: totalPrice
             };
-            console.log(productData)
             addToCart(productData);
         }
     };
