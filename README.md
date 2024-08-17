@@ -25,17 +25,17 @@
 - Category endpoints
 ![Category Endpoints](docs/backend/category.png)
 - Product endpoints
-- ![Category Endpoints](docs/backend/products.png)
+![Category Endpoints](docs/backend/products.png)
 - Part endpoints
-- ![Category Endpoints](docs/backend/parts.png)
+![Category Endpoints](docs/backend/parts.png)
 - Option endpoints
-- ![Category Endpoints](docs/backend/options.png)
+![Category Endpoints](docs/backend/options.png)
 - Custom Price endpoints
-- ![Category Endpoints](docs/backend/custom_price.png)
+![Category Endpoints](docs/backend/custom_price.png)
 - Prohibited Combinations endpoints
-- ![Category Endpoints](docs/backend/prohibited_combinations.png)
+![Category Endpoints](docs/backend/prohibited_combinations.png)
 - Order (checkout) endpoint
-- ![Category Endpoints](docs/backend/orders.png)
+![Category Endpoints](docs/backend/orders.png)
 
 ## Challenges
 - Frontend Side
