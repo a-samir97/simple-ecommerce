@@ -2,11 +2,11 @@ from django.contrib import admin
 
 from . import models
 
-admin.register(models.Category)
-admin.register(models.Product)
-admin.register(models.Part)
-admin.register(models.Option)
-admin.register(models.Order)
-admin.register(models.OrderItem)
-admin.register(models.ProhibitedCombination)
-admin.register(models.CustomPrice)
+admin.site.register(models.Category)
+admin.site.register(models.Product)
+admin.site.register(models.Part)
+admin.site.register(models.Option)
+admin.site.register(models.Order)
+admin.site.register(models.OrderItem)
+admin.site.register(models.ProhibitedCombination)
+admin.site.register(models.CustomPrice)

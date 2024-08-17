@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.validators import ValidationError
 
+from . import constants
 from . import models
 
 
@@ -56,6 +58,12 @@ class CustomPriceSerializer(serializers.ModelSerializer):
         fields = "__all__"
         list_serializer_class = BulkCreateCustomPriceSerializer
 
+    def validate(self, attrs):
+        super(CustomPriceSerializer, self).validate(attrs)
+        if len(attrs["options"]) < 2:
+            raise ValidationError(constants.ERR_MSG_AT_LEAST_2_OPTIONS)
+        return attrs
+
 
 class BulkCreateProhibitedCombinationSerializer(serializers.ListSerializer):
     def create(self, validated_data):
@@ -71,21 +79,22 @@ class ProhibitedCombinationSerializer(serializers.ModelSerializer):
         model = models.ProhibitedCombination
         fields = "__all__"
 
+    def validate(self, attrs):
+        super(ProhibitedCombinationSerializer, self).validate(attrs)
+        if len(attrs["options"]) < 2:
+            raise ValidationError(constants.ERR_MSG_AT_LEAST_2_OPTIONS)
+        return attrs
+
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OrderItem
-        fields = "__all__"
+        fields = ["product", "options"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
+    items = OrderItemSerializer(write_only=True, many=True)
 
-    # TODO: return order items here with the order serializer
     class Meta:
         model = models.Order
-        fields = "__all__"
-
-    # in creating order we need to use
-    # prohibitedCombination model to check for the options
-    # priceRule to calculate any combinations that need an additional price
+        fields = ["user", "total_price", "items", "timestamp"]

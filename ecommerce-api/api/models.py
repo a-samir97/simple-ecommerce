@@ -10,6 +10,12 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     icon = models.ImageField()
 
+    def __str__(self):
+        return f"{self.name} Category"
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
 
 class Product(models.Model):
     """
@@ -23,6 +29,9 @@ class Product(models.Model):
     description = models.TextField(null=True, blank=True)
     image = models.ImageField()
 
+    def __str__(self):
+        return f"{self.name} Product"
+
 
 class Part(models.Model):
     """
@@ -32,6 +41,9 @@ class Part(models.Model):
 
     name = models.CharField(max_length=100)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="parts")
+
+    def __str__(self):
+        return f"{self.name} Part"
 
 
 class Option(models.Model):
@@ -44,6 +56,9 @@ class Option(models.Model):
     price = models.FloatField()  # original price
     image = models.ImageField()
     quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.name} Option"
 
 
 class ProhibitedCombination(models.Model):
@@ -72,6 +87,9 @@ class Order(models.Model):
     total_price = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.user} | {self.total_price} "
+
 
 class OrderItem(models.Model):
     """
@@ -79,5 +97,8 @@ class OrderItem(models.Model):
     """
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    options = models.ManyToManyField(Option)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.order.user} | {self.product.name}"

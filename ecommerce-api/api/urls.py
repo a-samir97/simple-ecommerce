@@ -15,6 +15,5 @@ router.register(
     basename="prohibited-combinations",
 )
 router.register("orders", views.OrderViewSet, basename="orders")
-router.register("order-items", views.OrderItemViewSet, basename="order-items")
 
 urlpatterns = router.urls

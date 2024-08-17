@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from . import models
 from . import serializers
+from .services import OrderService
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -48,7 +49,7 @@ class PartViewSet(viewsets.ModelViewSet):
         # to handle bulk create parts
         if isinstance(kwargs.get("data", {}), list):
             kwargs["many"] = True
-        return super(PartViewSet, self).get_serializer(*args, **kwargs)
+        return super().get_serializer(*args, **kwargs)
 
 
 class OptionViewSet(viewsets.ModelViewSet):
@@ -57,13 +58,21 @@ class OptionViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
 
     def create(self, request, *args, **kwargs):
+        # check
+        if not request.POST or not request.FILES:
+            return Response(data={""}, status=status.HTTP_400_BAD_REQUEST)
+
         options_data = []
         for i in range(len(request.POST) // 3):  # 3 is the nunber of fields per option
             option = {
-                "name": request.POST.get(f"option[{i}][name]"),
-                "price": request.POST.get(f"option[{i}][price]"),
-                "part": request.POST.get(f"option[{i}][part]"),
-                "image": request.FILES.get(f"option[{i}][image]"),
+                "name": request.POST.get(f"option[{i}][name]")
+                or request.POST.get("name"),
+                "price": request.POST.get(f"option[{i}][price]")
+                or request.POST.get("price"),
+                "part": request.POST.get(f"option[{i}][part]")
+                or request.POST.get("part"),
+                "image": request.FILES.get(f"option[{i}][image]")
+                or request.FILES.get("image"),
             }
             options_data.append(option)
         serializer = self.get_serializer(data=options_data, many=True)
@@ -77,17 +86,33 @@ class CustomPriceViewSet(viewsets.ModelViewSet):
     queryset = models.CustomPrice.objects.all()
     serializer_class = serializers.CustomPriceSerializer
 
+    def get_serializer(self, *args, **kwargs):
+        # to handle bulk create parts
+        if isinstance(kwargs.get("data", {}), list):
+            kwargs["many"] = True
+        return super().get_serializer(*args, **kwargs)
+
 
 class ProhibitedCombinationViewSet(viewsets.ModelViewSet):
     queryset = models.ProhibitedCombination.objects.all()
     serializer_class = serializers.ProhibitedCombinationSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        # to handle bulk create parts
+        if isinstance(kwargs.get("data", {}), list):
+            kwargs["many"] = True
+        return super().get_serializer(*args, **kwargs)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-class OrderItemViewSet(viewsets.ModelViewSet):
-    queryset = models.OrderItem.objects.all()
-    serializer_class = serializers.OrderItemSerializer
+        order_service = OrderService()
+        created_order = order_service.create_whole_order(data=serializer.validated_data)
+        order_serializer = serializers.OrderSerializer(created_order)
+        return Response(data=order_serializer.data, status=status.HTTP_201_CREATED)
