@@ -21,7 +21,21 @@
 - Still in progress
 
 ## Backend Endpoints
-- Still in progress
+- ``Swagger URL-> http://localhost:8000/swagger/``
+- Category endpoints
+![Category Endpoints](docs/backend/category.png)
+- Product endpoints
+- ![Category Endpoints](docs/backend/products.png)
+- Part endpoints
+- ![Category Endpoints](docs/backend/parts.png)
+- Option endpoints
+- ![Category Endpoints](docs/backend/options.png)
+- Custom Price endpoints
+- ![Category Endpoints](docs/backend/custom_price.png)
+- Prohibited Combinations endpoints
+- ![Category Endpoints](docs/backend/prohibited_combinations.png)
+- Order (checkout) endpoint
+- ![Category Endpoints](docs/backend/orders.png)
 
 ## Challenges
 - Frontend Side
@@ -41,4 +55,6 @@
 - Swagger
 
 ## Improvements
-- Frontend UI 
+- Frontend UI
+- Each product can have more than 1 image
+- Each option can have more than 1 image
