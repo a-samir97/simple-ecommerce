@@ -63,7 +63,7 @@ class OptionViewSet(viewsets.ModelViewSet):
             return Response(data={""}, status=status.HTTP_400_BAD_REQUEST)
 
         options_data = []
-        for i in range(len(request.POST) // 3):  # 3 is the nunber of fields per option
+        for i in range(len(request.POST) // 4):  # 4 is the nunber of fields per option
             option = {
                 "name": request.POST.get(f"option[{i}][name]")
                 or request.POST.get("name"),
@@ -71,6 +71,8 @@ class OptionViewSet(viewsets.ModelViewSet):
                 or request.POST.get("price"),
                 "part": request.POST.get(f"option[{i}][part]")
                 or request.POST.get("part"),
+                "quantity": request.POST.get(f"option[{i}][quantity]")
+                or request.POST.get("quantity"),
                 "image": request.FILES.get(f"option[{i}][image]")
                 or request.FILES.get("image"),
             }
@@ -111,7 +113,6 @@ class OrderViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         order_service = OrderService()
         created_order = order_service.create_whole_order(data=serializer.validated_data)
         order_serializer = serializers.OrderSerializer(created_order)

@@ -47,9 +47,20 @@ class RetrievePartOptionSerializer(serializers.ModelSerializer):
 class BulkCreateCustomPriceSerializer(serializers.ListSerializer):
     def create(self, validated_data):
         custom_price_data = [
-            models.CustomPrice(**custom_price) for custom_price in validated_data
+            models.CustomPrice(
+                **{k: v for k, v in custom_price.items() if k != "options"}
+            )
+            for custom_price in validated_data
         ]
-        return models.CustomPrice.objects.bulk_create(custom_price_data)
+        created_custom_prices = models.CustomPrice.objects.bulk_create(
+            custom_price_data
+        )
+
+        # Handle M2M field (options) manually
+        for custom_price, data in zip(created_custom_prices, validated_data):
+            custom_price.options.set(data["options"])
+
+        return created_custom_prices
 
 
 class CustomPriceSerializer(serializers.ModelSerializer):
@@ -67,17 +78,24 @@ class CustomPriceSerializer(serializers.ModelSerializer):
 
 class BulkCreateProhibitedCombinationSerializer(serializers.ListSerializer):
     def create(self, validated_data):
-        combinations = [
-            models.ProhibitedCombination(**combination)
-            for combination in validated_data
-        ]
-        return models.ProhibitedCombination.objects.bulk_create(combinations)
+        # Create the ProhibitedCombination instances without M2M data
+        combinations = [models.ProhibitedCombination() for _ in validated_data]
+        created_combinations = models.ProhibitedCombination.objects.bulk_create(
+            combinations
+        )
+
+        # Assign the M2M fields
+        for combination, data in zip(created_combinations, validated_data):
+            combination.options.set(data["options"])
+
+        return created_combinations
 
 
 class ProhibitedCombinationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProhibitedCombination
         fields = "__all__"
+        list_serializer_class = BulkCreateProhibitedCombinationSerializer
 
     def validate(self, attrs):
         super(ProhibitedCombinationSerializer, self).validate(attrs)
@@ -87,9 +105,11 @@ class ProhibitedCombinationSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    quantity = serializers.IntegerField()
+
     class Meta:
         model = models.OrderItem
-        fields = ["product", "options"]
+        fields = ["product", "options", "quantity"]
 
 
 class OrderSerializer(serializers.ModelSerializer):

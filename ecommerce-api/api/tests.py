@@ -1,5 +1,6 @@
 import tempfile
 
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from django.test import TestCase
@@ -18,6 +19,14 @@ from .models import ProhibitedCombination
 from .services import OrderService
 
 
+class AbstractTestCase(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.client.force_authenticate(
+            user=User.objects.create(username="admin", password="testpassword")
+        )
+
+
 def get_temporary_image():
     return SimpleUploadedFile(
         name="test_image.jpg",
@@ -27,10 +36,10 @@ def get_temporary_image():
 
 
 @override_settings(MEDIA_ROOT=tempfile.gettempdir())
-class CategoryAPIsTest(TestCase):
+class CategoryAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super().setUp()
         self.category = Category.objects.create(name="Test", icon=get_temporary_image())
-        self.client = APIClient()
         self.url = "/api/categories/"
 
     def tearDown(self) -> None:
@@ -107,8 +116,9 @@ class CategoryAPIsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
-class ProductAPIsTest(TestCase):
+class ProductAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super().setUp()
         self.category = Category.objects.create(
             name="test category", icon=get_temporary_image()
         )
@@ -117,7 +127,6 @@ class ProductAPIsTest(TestCase):
             image=get_temporary_image(),
             category=self.category,
         )
-        self.client = APIClient()
         self.url = "/api/products/"
 
     def tearDown(self) -> None:
@@ -168,8 +177,9 @@ class ProductAPIsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
-class PartAPIsTest(TestCase):
+class PartAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super().setUp()
         self.product = Product.objects.create(
             category=Category.objects.create(
                 icon=get_temporary_image(), name="category test"
@@ -178,7 +188,6 @@ class PartAPIsTest(TestCase):
             image=get_temporary_image(),
         )
         self.part = Part.objects.create(product=self.product, name="New Part")
-        self.client = APIClient()
         self.url = "/api/parts/"
 
     def tearDown(self) -> None:
@@ -212,6 +221,13 @@ class PartAPIsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("name", response.data)
 
+    def test_bulk_create_part_for_product(self):
+        data = [{"product": self.product.id, "name": "invalid part"}]
+
+        response = self.client.post(self.url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_list_all_parts_related_to_specific_product(self):
         pass
 
@@ -244,8 +260,9 @@ class PartAPIsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
-class OptionAPIsTest(TestCase):
+class OptionAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super().setUp()
         self.product = Product.objects.create(
             category=Category.objects.create(
                 icon=get_temporary_image(), name="category test"
@@ -260,7 +277,6 @@ class OptionAPIsTest(TestCase):
             name="Option",
             price=120,
         )
-        self.client = APIClient()
         self.url = "/api/options/"
 
     def tearDown(self) -> None:
@@ -275,6 +291,7 @@ class OptionAPIsTest(TestCase):
             "image": get_temporary_image(),
             "price": 20,
             "part": self.part.id,
+            "quantity": 3,
         }
 
         response = self.client.post(self.url, data)
@@ -324,8 +341,9 @@ class OptionAPIsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
-class PriceRuleAPIsTest(TestCase):
+class PriceRuleAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super().setUp()
         self.product = Product.objects.create(
             category=Category.objects.create(
                 icon=get_temporary_image(), name="category test"
@@ -346,7 +364,6 @@ class PriceRuleAPIsTest(TestCase):
             name="Option",
             price=120,
         )
-        self.client = APIClient()
         self.url = "/api/custom-prices/"
 
     def test_create_custom_price_with_one_option_failure_case(self):
@@ -365,9 +382,21 @@ class PriceRuleAPIsTest(TestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_bulk_create_custom_price_with_valid_data(self):
+        data = [
+            {
+                "options": [self.option_1.id, self.option_2.id],
+                "additional_price": 120,
+            }
+        ]
 
-class ProhibitedCombinationsAPIsTest(TestCase):
+        response = self.client.post(self.url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class ProhibitedCombinationsAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super(ProhibitedCombinationsAPIsTest, self).setUp()
         self.product = Product.objects.create(
             category=Category.objects.create(
                 icon=get_temporary_image(), name="category test"
@@ -388,7 +417,6 @@ class ProhibitedCombinationsAPIsTest(TestCase):
             name="Option",
             price=120,
         )
-        self.client = APIClient()
         self.url = "/api/prohibited-combinations/"
 
     def test_create_prohibited_combination_with_one_option_failure_case(self):
@@ -404,6 +432,12 @@ class ProhibitedCombinationsAPIsTest(TestCase):
         }
 
         response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_bulk_create_prohibited_combinations_with_valid_data(self):
+        data = [{"options": [self.option_1.id, self.option_2.id]}]
+        response = self.client.post(self.url, data, format="json")
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
@@ -431,20 +465,14 @@ class OrderServiceTest(TestCase):
         self.service = OrderService()
 
     def test_validate_quantity_for_options(self):
-        self.assertIsNone(self.service.validate_options_quantity(self.options[:2]))
+        self.assertIsNone(self.service.validate_options_quantity(self.options[:2], 2))
 
     def test_validate_quantity_for_options_has_less_than_1(self):
         with self.assertRaises(ValidationError):
-            self.service.validate_options_quantity(self.options)
-
-    def test_create_order(self):
-        created_order = self.service.create_order(user="best user", price=1200)
-        self.assertEqual(created_order.total_price, 1200)
-        self.assertEqual(created_order.user, "best user")
-        self.assertIsInstance(created_order, Order)
+            self.service.validate_options_quantity(self.options, 2)
 
     def test_create_order_item(self):
-        temp_order = self.service.create_order(user="Test", price=100)
+        temp_order = Order.objects.create(user="Test", total_price=100)
         order_item = self.service.create_order_item(
             options=self.options, product=self.product, order=temp_order
         )
@@ -483,6 +511,7 @@ class OrderServiceTest(TestCase):
                 {
                     "options": [self.options[0], self.options[1]],
                     "product": self.product,
+                    "quantity": 2,
                 }
             ],
             "user": "great user",
@@ -492,8 +521,9 @@ class OrderServiceTest(TestCase):
         self.assertIsInstance(created_order, Order)
 
 
-class OrderAPIsTest(TestCase):
+class OrderAPIsTest(AbstractTestCase):
     def setUp(self) -> None:
+        super(OrderAPIsTest, self).setUp()
         self.product = Product.objects.create(
             category=Category.objects.create(
                 icon=get_temporary_image(), name="category test"
@@ -513,7 +543,6 @@ class OrderAPIsTest(TestCase):
                 image=get_temporary_image(), part=self.part, price=100, quantity=0
             ),
         ]
-        self.client = APIClient()
         self.url = "/api/orders/"
 
     def test_create_order_success_case(self):
@@ -523,10 +552,12 @@ class OrderAPIsTest(TestCase):
             {
                 "options": [self.options[0].id, self.options[1].id],
                 "product": self.product.id,
+                "quantity": 1,
             },
             {
                 "options": [self.options[0].id, self.options[1].id],
                 "product": self.product.id,
+                "quantity": 1,
             },
         ]
         data = {
