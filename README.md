@@ -25,17 +25,17 @@
 - Category endpoints
 ![Category Endpoints](docs/backend/category.png)
 - Product endpoints
-![Category Endpoints](docs/backend/products.png)
+![Product Endpoints](docs/backend/products.png)
 - Part endpoints
-![Category Endpoints](docs/backend/parts.png)
+![Part Endpoints](docs/backend/parts.png)
 - Option endpoints
-![Category Endpoints](docs/backend/options.png)
+![Option Endpoints](docs/backend/options.png)
 - Custom Price endpoints
-![Category Endpoints](docs/backend/custom_price.png)
+![Custom Price Endpoints](docs/backend/custom_price.png)
 - Prohibited Combinations endpoints
-![Category Endpoints](docs/backend/prohibited_combinations.png)
+![Prohibited Combinations Endpoints](docs/backend/prohibited_combinations.png)
 - Order (checkout) endpoint
-![Category Endpoints](docs/backend/orders.png)
+![Order Endpoints](docs/backend/orders.png)
 
 ## Challenges
 - Frontend Side
@@ -44,7 +44,20 @@
   - Handling race conditions in purchasing a new product
 
 ## ScreenShot
-- Still not ready yet.
+- Create product step
+![Product](docs/frontend/product.png)
+- Create part step
+![Parts](docs/frontend/parts.png)
+- Create options step
+![Options](docs/frontend/options.png)
+- Create custom price step
+![Custom Price](docs/frontend/custom_price.png)
+- Create prohibited combinations step
+![Combinations](docs/frontend/prohibited_combinations.png)
+- Cart and Checkout
+![Cart and Checkout](docs/frontend/cart_checkout.png)
+- Login
+![Login](docs/frontend/login.png)
 
 ## Tools and Langauges
 - Python
@@ -58,3 +71,4 @@
 - Frontend UI
 - Each product can have more than 1 image
 - Each option can have more than 1 image
+- Authentication and Authorization (User Roles)
