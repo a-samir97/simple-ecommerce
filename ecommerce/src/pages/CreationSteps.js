@@ -5,6 +5,7 @@ import PartForm from "../components/PartForm";
 import PartsOptionsForm from "../components/OptionForm";
 import PriceRuleForm from "../components/PriceRuleForm";
 import ProhibitedCombinations from "../components/ProhibitedCombinations";
+import {useNavigate} from "react-router-dom";
 
 const steps = [
   {
@@ -33,22 +34,14 @@ const CreationStepsComponent = () => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [formData, setFormData] = useState({});
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const next = () => {
-    if (isFormSubmitted) {
       setCurrent(current + 1);
-      setIsFormSubmitted(false); // Reset after moving to next step
-    }
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
   };
 
   const handleFormSubmit = (data) => {
     setFormData(data);
-    setIsFormSubmitted(true);
     next();
   };
 
@@ -76,17 +69,30 @@ const CreationStepsComponent = () => {
           formData: formData
         })}
       </div>
-      <div style={{ marginTop: 24 }}>
-        {current !== steps.length - 1 && (
+      {current === 3 && (
           <Button
-            type="primary"
+            style={{
+              margin: '0 8px',
+            }}
             onClick={() => next()}
-            disabled={!isFormSubmitted}
           >
-            Next
+            Skip
           </Button>
-        )}
-      </div>
+      )
+      }
+      {current === steps.length - 1 && (
+          <Button
+            style={{
+              margin: '0 8px',
+            }}
+            onClick={() => {
+              navigate("/")
+            }}
+          >
+            Done
+          </Button>
+      )
+      }
     </div>
   );
 };

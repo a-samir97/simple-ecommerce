@@ -38,10 +38,20 @@ const ProductDetail = ({ product }) => {
                             dataSource={part.options}
                             renderItem={option => (
                                 <List.Item>
-                                    <Text>{option.name}</Text>
-                                    <Text italic type="secondary">${option.price}</Text>
-                                    <Text italic type="secondary">{option.quantity} left</Text>
-                                    <Image src={option.image} style={{width:"100px"}}></Image>
+                                {option.quantity > 0 ? (
+                                        <>
+                                            <Text>{option.name}</Text>
+                                            <Text italic type="secondary">${option.price}</Text>
+                                            <Text italic type="secondary">{option.quantity} left</Text>
+                                            <Image src={option.image} style={{ width: "100px" }} />
+                                        </>
+                                    ) : (
+                                        <>
+                                           <Text type="danger">{option.name} is out of stock</Text>
+                                            <Text italic type="secondary">${option.price}</Text>
+                                            <Image src={option.image} style={{ width: "100px" }} />
+                                       </>
+                                    )}
                                 </List.Item>
                             )}
                         />

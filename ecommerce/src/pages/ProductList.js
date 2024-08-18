@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {Space, Col, List, Row, Card, Pagination, Image, Button} from 'antd';
 import {Divider} from "antd/lib";
+import LogoutButton from "../components/Logout";
+import {useNavigate} from "react-router-dom";
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [current, setCurrent] = useState(1)
     const [totalCount, setTotalCount] = useState(10)
+    const navigate = useNavigate();
 
+    const token = localStorage.getItem("role")
     const paginationChange = async (page) => {
         const response = await fetch(`http://localhost:8000/api/products/?page=${page}`)
         const data = await response.json();
-        console.log(data)
         setCurrent(page)
         setProducts(data["results"])
     }
@@ -35,9 +38,15 @@ const ProductList = () => {
         <Card>
             <Row gutter={16} justify={'space-around'}>
                 <Col span={10}>
+                   <h2>Product List</h2>
                     <Space>
-                       <h2>Product List</h2>
-                        <Button href={'/create-product/'}> Create New Product</Button>
+                        <Button href={'/checkout/'}> Checkout</Button>
+                        { token && (
+                        <>
+                            <Button href={'/create-product/'}> Create New Product</Button>
+                            <LogoutButton/>
+                        </>
+                        )}
                     </Space>
                     <Divider/>
                  <List

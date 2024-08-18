@@ -60,10 +60,18 @@ const PartForm = ({onSubmit, formData}) => {
                 >
                   <Input
                     placeholder="part name"
-                    style={{
-                      width: '60%',
-                        marginLeft:"5%"
-                    }}
+                    style={
+                        (index === 0)?
+                        {
+                            width: '60%',
+                            marginLeft:"6%"
+                        }
+                    :
+                        {
+                      width: '55%',
+                        marginLeft:"14%"
+                    }
+                    }
                   />
                 </Form.Item>
                 {fields.length > 1 ? (

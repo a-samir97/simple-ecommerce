@@ -100,7 +100,9 @@ const ProductForm = ({onSubmit}) => {
                 </Button>
             </Form.Item>
 
-            <CreateCategory visible={isModalOpen}/>
+            <CreateCategory
+                visible={isModalOpen}
+                onCategoryCreated={fetchCategories}/>
         </Form>
     );
 };

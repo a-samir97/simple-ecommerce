@@ -1,9 +1,9 @@
-import {Button, Form, Input, Modal, Upload} from "antd";
+import {Button, Form, Input, Modal, Upload, message} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {CategoryAPI} from "../services/api";
 
-const CreateCategory = ({visible}) => {
+const CreateCategory = ({visible, onCategoryCreated}) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(visible);
     const [file, setFile] = useState(null);
@@ -20,16 +20,17 @@ const CreateCategory = ({visible}) => {
         formData.append('icon',file);
         try {
             await CategoryAPI(formData);
-            alert('Product created successfully!');
+            message.success('Category created successfully!');
+            form.resetFields();
+            onCategoryCreated();
             closeModal();
         } catch (error) {
             console.error('Error creating product:', error);
         }
     };
-
     const handleBeforeUpload = (file) => {
         setFile(file);
-        return false;   // Prevent automatic upload
+        return false;
     };
 
     return (
