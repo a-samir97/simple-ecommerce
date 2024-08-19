@@ -9,7 +9,7 @@
 - [Improvements](#improvements)
 
 ## Business Requirenments
-- `Admin` can create products, `user` can purchase buy products
+- `Admin` can create products, `user` can buy products
 - Each `product` has its `parts` and `options`.
 - `Product` can have more than one `part`.
 - Each `Part` can have more than one `options`.
@@ -18,7 +18,7 @@
 - `Prohibited Combination` added from the admin side, to check and validate that user can not select these cominations.
 
 ## Database Schema 
-- Still in progress
+![Database](docs/db/database.png)
 
 ## Backend Endpoints
 - ``Swagger URL-> http://localhost:8000/swagger/``
@@ -42,6 +42,7 @@
   - All the frontend stuff :joy
 - Backend Side
   - Handling race conditions in purchasing a new product
+  - Designing database to make tha admin able to add more than product 
 
 ## ScreenShot
 - Create product step
@@ -56,19 +57,31 @@
 ![Combinations](docs/frontend/prohibited_combinations.png)
 - Cart and Checkout
 ![Cart and Checkout](docs/frontend/cart_checkout.png)
-- Login
+- Login (Note: login is used for admin only to create products)
 ![Login](docs/frontend/login.png)
 
+## Backend Unit tests
+- Coverage
+![Coverage](docs/tests/coverage.png)
+- Unit tests
+![Unit tests](docs/tests/unittests.png)
+
 ## Tools and Langauges
-- Python
-- Django Rest Framework
-- JavaScript
-- React JS
-- Docker
-- Swagger
+- Backend
+  - Python
+  - Django
+  - Django Rest Framework
+- Frontend
+  - JavaScript
+  - React JS
+- Containerzation
+  - Docker
+- Documentation
+  - Swagger
 
 ## Improvements
 - Frontend UI
 - Each product can have more than 1 image
 - Each option can have more than 1 image
 - Authentication and Authorization (User Roles)
+- Enhance and improve structure of the unit test (FakeRepo) for testing
