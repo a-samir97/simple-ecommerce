@@ -1,14 +1,16 @@
-import React from 'react';
-import {Button, Divider, Form, Input} from 'antd';
-import axios from "axios";
+import {React} from 'react';
+import {Button, Divider, Form, Input, Typography} from 'antd';
 import {useNavigate} from "react-router-dom";
+import LogoutButton from "../components/Logout";
+import API from "../services/api";
+const {Text} = Typography
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const token = localStorage.getItem("role")
     const onFinish = async (values) => {
       try {
-          const response = await axios.post(
-          "http://localhost:8000/api/token/", values);
+          const response = await API.post("/api/token", values)
           localStorage.setItem("role", response.data["access"]);
           navigate("/");
       } catch (error) {
@@ -17,9 +19,19 @@ const LoginPage = () => {
     }
     return (
         <>
-            <h3>Login Page</h3>
-            <Divider></Divider>
-            <Form
+            {
+                token ?
+                <>
+                    <h3> You already logged in </h3>
+                    <Button href={"/"} style={{marginRight: '5px'}}> Product list </Button>
+                    <LogoutButton />
+                </>
+                :
+                <>
+                 <h3>Login Page</h3>
+                    <Text type="secondary">login page is for admins only, soon will be available for everyone</Text>
+                <Divider></Divider>
+                <Form
                 name="basic"
                 labelCol={{
                     span: 8,
@@ -30,7 +42,7 @@ const LoginPage = () => {
                 style={{
                     maxWidth: 600,
                     marginLeft:"30%",
-                    marginTop: "5%"
+                    marginTop: "2%"
                 }}
                 initialValues={{
                     remember: true,
@@ -75,7 +87,9 @@ const LoginPage = () => {
                     </Button>
                 </Form.Item>
             </Form>
-        </>
+            </>
+            }
+    </>
     );
 }
 export default LoginPage;

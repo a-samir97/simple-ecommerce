@@ -3,6 +3,7 @@ import {Card, Row, Col, Typography, List, Image, Button} from 'antd';
 import {useParams} from "react-router-dom";
 import {Divider} from "antd/lib";
 import ProductPage from "../components/ProductPage";
+import API from "../services/api";
 const { Title, Text } = Typography;
 
 const ProductDetail = ({ product }) => {
@@ -37,22 +38,22 @@ const ProductDetail = ({ product }) => {
                             itemLayout="horizontal"
                             dataSource={part.options}
                             renderItem={option => (
-                                <List.Item>
+                              <List.Item key={option.id}>
                                 {option.quantity > 0 ? (
-                                        <>
-                                            <Text>{option.name}</Text>
-                                            <Text italic type="secondary">${option.price}</Text>
-                                            <Text italic type="secondary">{option.quantity} left</Text>
-                                            <Image src={option.image} style={{ width: "100px" }} />
-                                        </>
-                                    ) : (
-                                        <>
-                                           <Text type="danger">{option.name} is out of stock</Text>
-                                            <Text italic type="secondary">${option.price}</Text>
-                                            <Image src={option.image} style={{ width: "100px" }} />
-                                       </>
-                                    )}
-                                </List.Item>
+                                    <>
+                                        <Text>{option.name}</Text>
+                                        <Text italic type="secondary">${option.price}</Text>
+                                        <Text italic type="secondary">{option.quantity} left</Text>
+                                        <Image src={option.image} style={{ width: "100px" }} />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Text type="danger">{option.name} is out of stock</Text>
+                                        <Text italic type="secondary">${option.price}</Text>
+                                        <Image src={option.image} style={{ width: "100px" }} />
+                                    </>
+                                )}
+                            </List.Item>
                             )}
                         />
                     </Card>
@@ -72,8 +73,8 @@ const ProductDetailsComponent = () => {
     useEffect(()=>{
         const fetchProductDetails = async() => {
             try {
-                const response = await fetch(`http://localhost:8000/api/products/${id}/`)
-                const data = await response.json()
+                const response = await API.get(`/products/${id}/`)
+                const data = await response.data
                 setProduct(data)
                 setLoading(false)
             } catch (error) {
@@ -86,11 +87,11 @@ const ProductDetailsComponent = () => {
     }, [id])
 
      if (loading) {
-        return <div>Loading...</div>; // Show a loading state while fetching
+        return <div>Loading...</div>;
       }
 
       if (!product) {
-        return <div>Product not found.</div>; // Handle case where product is not found
+        return <div>Product not found.</div>;
       }
 
     return (

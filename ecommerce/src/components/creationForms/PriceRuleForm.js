@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Select, Input, Button, message } from 'antd';
-import { CustomPriceAPI } from '../services/api';
-import { useNavigate } from "react-router-dom";
+import { CustomPriceAPI } from '../../services/api';
 
 const { Option } = Select;
 
@@ -32,10 +31,9 @@ const PriceRuleForm = ({ onSubmit, formData }) => {
 
     const handleSubmit = async (values) => {
         if (checkForDuplicates()) {
-            message.error("Duplicate combinations found! Please check your inputs.");
+            message.error("Duplicate custom price found! Please check your inputs.");
             return;
         }
-        console.log(priceRules)
         try {
             await CustomPriceAPI(priceRules);
             message.success("Custom Price created successfully!");

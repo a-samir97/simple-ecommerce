@@ -63,7 +63,7 @@ class Option(models.Model):
 
 class ProhibitedCombination(models.Model):
     """
-    ProhibitedCombinations Model, represents prohibited combinations options
+    ProhibitedCombinationsForm Model, represents prohibited combinations options
     """
 
     options = models.ManyToManyField(Option, related_name="prohibited_combinations")
@@ -99,7 +99,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     options = models.ManyToManyField(Option)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=1)  # quantity of each option
 
     def __str__(self):
         return f"{self.order.user} | {self.product.name}"

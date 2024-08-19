@@ -1,9 +1,9 @@
 import {Button, Form, Input, Modal, Upload, message} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
-import {CategoryAPI} from "../services/api";
+import {CategoryAPI} from "../../services/api";
 
-const CreateCategory = ({visible, onCategoryCreated}) => {
+const CategoryForm = ({visible, onCategoryCreated}) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState(visible);
     const [file, setFile] = useState(null);
@@ -74,4 +74,4 @@ const CreateCategory = ({visible, onCategoryCreated}) => {
     )
 }
 
-export default CreateCategory;
+export default CategoryForm;

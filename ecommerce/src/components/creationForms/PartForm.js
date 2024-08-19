@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Select} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { PartAPI } from '../services/api';
+import { PartAPI } from '../../services/api';
 import {message} from "antd/lib";
 
 const { Option } = Select;

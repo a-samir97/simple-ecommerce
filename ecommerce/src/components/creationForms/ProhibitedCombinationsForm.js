@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Select, Button, message } from 'antd';
-import { ProhibitedCombinationAPI } from '../services/api';
+import { ProhibitedCombinationAPI } from '../../services/api';
 import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
-const ProhibitedCombinations = ({ onSubmit, formData }) => {
+const ProhibitedCombinationsForm = ({ onSubmit, formData }) => {
     const [selectedCombinations, setSelectedCombinations] = useState([[]]);
     const navigate = useNavigate();
 
@@ -76,4 +76,4 @@ const ProhibitedCombinations = ({ onSubmit, formData }) => {
     );
 };
 
-export default ProhibitedCombinations;
+export default ProhibitedCombinationsForm;

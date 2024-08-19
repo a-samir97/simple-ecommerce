@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button, message, Steps, theme } from 'antd';
-import ProductForm from "../components/ProductForm";
-import PartForm from "../components/PartForm";
-import PartsOptionsForm from "../components/OptionForm";
-import PriceRuleForm from "../components/PriceRuleForm";
-import ProhibitedCombinations from "../components/ProhibitedCombinations";
+import { Button, Steps, theme } from 'antd';
+import ProductForm from "../components/creationForms/ProductForm";
+import PartForm from "../components/creationForms/PartForm";
+import PartsOptionsForm from "../components/creationForms/OptionForm";
+import PriceRuleForm from "../components/creationForms/PriceRuleForm";
+import ProhibitedCombinationsForm from "../components/creationForms/ProhibitedCombinationsForm";
 import {useNavigate} from "react-router-dom";
 
 const steps = [
@@ -26,7 +26,7 @@ const steps = [
   },
   {
     title: 'Prohibited Combinations',
-    content: <ProhibitedCombinations />,
+    content: <ProhibitedCombinationsForm />,
   },
 ];
 

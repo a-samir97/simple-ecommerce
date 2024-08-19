@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Input, Button, Select, Upload, Row, Col} from 'antd';
 import {UploadOutlined} from "@ant-design/icons";
-import {ProductsAPI} from "../services/api";
-import CreateCategory from "./CreateCategory";
+import {ProductsAPI} from "../../services/api";
+import CategoryForm from "./CategoryForm";
 import {message} from "antd/lib";
+import TextArea from "antd/es/input/TextArea";
 
 const { Option } = Select;
 
@@ -42,6 +43,7 @@ const ProductForm = ({onSubmit}) => {
         formData.append('name', values.name)
         formData.append('image',file);
         formData.append('category', values.category)
+        formData.append('description', values.description)
 
         try {
             const response = await ProductsAPI(formData);
@@ -57,7 +59,7 @@ const ProductForm = ({onSubmit}) => {
               onFinish={handleProductCreation}
               form={form}
               style={{margin: "30px", width:"500px", marginLeft: "35%"}}>
-            <Form.Item label="Product Name" name="name" rules={[{ required: true, message: 'Please enter the product name' }]}>
+            <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please enter the product name' }]}>
                 <Input placeholder="Enter product name" />
             </Form.Item>
             <Form.Item>
@@ -77,13 +79,16 @@ const ProductForm = ({onSubmit}) => {
             <Button onClick={showModal}>+</Button>
           </Col>
         </Row>
+            <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please enter the product description' }]}>
+                <TextArea />
+            </Form.Item>
       </Form.Item>
             <Form.Item
                         name="icon"
-                        label="Product Image"
+                        label="Image"
                         valuePropName="file"
                         getValueFromEvent={(e) => e && e.file}
-                        rules={[{ required: true, message: 'Please upload an icon' }]}
+                        rules={[{ required: true, message: 'Please upload product image' }]}
                     >
                         <Upload
                             name="icon"
@@ -100,7 +105,7 @@ const ProductForm = ({onSubmit}) => {
                 </Button>
             </Form.Item>
 
-            <CreateCategory
+            <CategoryForm
                 visible={isModalOpen}
                 onCategoryCreated={fetchCategories}/>
         </Form>

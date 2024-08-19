@@ -1,5 +1,5 @@
 import {Button, List} from "antd";
-import React, {useState} from "react";
+import React from "react";
 
 const CartList = ({cart, removeFromCart}) => {
     return (
@@ -11,7 +11,6 @@ const CartList = ({cart, removeFromCart}) => {
                 >
                     <List.Item.Meta
                         title={item.name}
-                        // description={`Parts: ${item.items.map(part => part.name).join(', ')}`}
                     />
                     <div>Total Price: ${item.total_price}</div>
                 </List.Item>

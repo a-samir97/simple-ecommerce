@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Row, Col, Upload, Divider, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { OptionsAPI } from "../services/api";
+import { OptionsAPI } from "../../services/api";
 import { message } from "antd/lib";
 
 const { Item } = Form;

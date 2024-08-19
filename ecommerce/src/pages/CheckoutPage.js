@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Row, Col, Divider, Typography} from 'antd'
+import {Row, Col, Divider} from 'antd'
 import CartList from "../components/CartList";
 import Checkout from "../components/Checkout";
 

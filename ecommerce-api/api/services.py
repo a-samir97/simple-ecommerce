@@ -1,7 +1,9 @@
 from django.db import transaction
+from django.db.models import F
 from rest_framework.exceptions import ValidationError
 
 from .models import CustomPrice
+from .models import Option
 from .models import Order
 from .models import OrderItem
 from .models import ProhibitedCombination
@@ -36,9 +38,13 @@ class OrderService:
         )
         return custom_price.additional_price if custom_price else 0
 
-    def decrease_option_stock(self, options, quantity):
+    def decrease_option_stock(self, options: list[Option], quantity):
+        # lock the selected row in database while updating
+        # locked_options = Option.objects.select_for_update().filter(
+        #     id__in=[option.id for option in options]
+        # )
         for option in options:
-            option.quantity -= quantity
+            option.quantity = F("quantity") - quantity
             option.save()
 
     @transaction.atomic()

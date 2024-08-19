@@ -14,7 +14,7 @@ const Checkout = ({ cart }) => {
             total_price:total_price
         }
         try{
-            const response = await OrderAPI(data);
+            await OrderAPI(data);
             message.success("Thanks, Order is created sucuessfully.")
             localStorage.removeItem("cart")
             navigate("/")
