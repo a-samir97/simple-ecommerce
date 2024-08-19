@@ -1,0 +1,56 @@
+[
+  {
+    "model": "api.category", "pk": 37, "fields": {"name": "Bike", "icon": "bicycle.jpg"}
+  },
+  {
+    "model": "api.product", "pk": 118, "fields": {"name": "Bicycle", "category": 37, "description": "this is the bike description", "image": "bicycle_Ei12cLl.jpg"}
+  },
+  {
+    "model": "api.product", "pk": 119, "fields": {"name": "bike 2", "category": 37, "description": "Description of bike 2", "image": "Full_suspension_cjo3Uxw.jpg"}
+  },
+  {
+    "model": "api.part", "pk": 186, "fields": {"name": "Frame Type", "product": 118}
+  },
+  {
+    "model": "api.part", "pk": 187, "fields": {"name": "Rim Color", "product": 118}
+  },
+  {
+    "model": "api.part", "pk": 188, "fields": {"name": "Frame finish", "product": 119}
+  },
+  {
+    "model": "api.part", "pk": 189, "fields": {"name": "Wheels", "product": 119}
+  },
+  {
+    "model": "api.option", "pk": 123, "fields": {"name": "Full-Suspension", "part": 186, "price": 100.0, "image": "Full_suspension.jpg", "quantity": 8}
+  },
+  {
+    "model": "api.option", "pk": 124, "fields": {"name": "Diamond", "part": 186, "price": 120.0, "image": "diamond.jpeg", "quantity": 12}
+  },
+  {
+    "model": "api.option", "pk": 125, "fields": {"name": "Step-through", "part": 186, "price": 90.0, "image": "step_through.jpeg", "quantity": 11}
+  },
+  {
+    "model": "api.option", "pk": 126, "fields": {"name": "Red", "part": 187, "price": 10.0, "image": "red_rim.jpg", "quantity": 10}
+  },
+  {
+    "model": "api.option", "pk": 127, "fields": {"name": "Black", "part": 187, "price": 12.0, "image": "black_rim.jpg", "quantity": 8}
+  },
+  {
+    "model": "api.option", "pk": 128, "fields": {"name": "Blue", "part": 187, "price": 11.0, "image": "blue_rim.jpg", "quantity": 10}
+  },
+  {
+    "model": "api.option", "pk": 129, "fields": {"name": "Matte", "part": 188, "price": 20.0, "image": "Matte_frame.jpg", "quantity": 10}
+  },
+  {
+    "model": "api.option", "pk": 130, "fields": {"name": "Shiny", "part": 188, "price": 30.0, "image": "shine_frame.jpg", "quantity": 12}
+  },
+  {
+    "model": "api.option", "pk": 131, "fields": {"name": "Road wheels", "part": 189, "price": 10.0, "image": "road_wheel.jpg", "quantity": 12}
+  },
+  {
+    "model": "api.option", "pk": 132, "fields": {"name": "Fat bike wheels", "part": 189, "price": 12.0, "image": "fat_bike.jpg", "quantity": 10}
+  },
+  {
+    "model": "api.customprice", "pk": 27, "fields": {"additional_price": 10.0, "options": [129, 131]}
+  }
+]
