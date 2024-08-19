@@ -5,6 +5,7 @@
 - [Backend Endpoints](#backend-endpoints)
 - [Challenges](#challenges)
 - [Screenshots](#screenshot)
+- [Helpful Commands](#helpful-commands)
 - [Tools and Langauges](#tools-and-langauges)
 - [Improvements](#improvements)
 
@@ -59,13 +60,27 @@
 ![Cart and Checkout](docs/frontend/cart_checkout.png)
 - Login (Note: login is used for admin only to create products)
 ![Login](docs/frontend/login.png)
+- Product list
+![Product List](docs/frontend/product_list.png)
+- Product details
+![Product details](docs/frontend/product_details.png)
+## helpful commands
+- Command to run unit test
+``
+make test
+``
+![Unit test](docs/makefile/test.png)
 
-## Backend Unit tests
-- Coverage
-![Coverage](docs/tests/coverage.png)
-- Unit tests
-![Unit tests](docs/tests/unittests.png)
-
+- Command to load data (fixtures)
+``
+make loaddata
+``
+![Load data](docs/makefile/loaddata.png)
+- Command to create super user (admin)
+``
+make superuser
+``
+![Super User](docs/makefile/superuser.png)
 ## Tools and Langauges
 - Backend
   - Python
@@ -85,3 +100,4 @@
 - Each option can have more than 1 image
 - Authentication and Authorization (User Roles)
 - Enhance and improve structure of the unit test (FakeRepo) for testing
+- Add Account model for every user (to check balance before purchasing product)

@@ -1,4 +1,4 @@
-import {React} from 'react';
+import React from 'react';
 import {Button, Divider, Form, Input, Typography} from 'antd';
 import {useNavigate} from "react-router-dom";
 import LogoutButton from "../components/Logout";

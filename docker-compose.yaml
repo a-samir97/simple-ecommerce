@@ -12,6 +12,7 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=db
   frontend:
+    container_name: frontend
     build:
       context: ./ecommerce
       dockerfile: Dockerfile
@@ -26,6 +27,7 @@ services:
       - backend
 
   backend:
+    container_name: backend
     build:
       context: ./ecommerce-api
       dockerfile: Dockerfile
